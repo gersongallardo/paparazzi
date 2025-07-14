@@ -12,7 +12,7 @@
   <firmware name="rotorcraft">
 
     <!-- Main autopilot MCU -->
-    <target name="ap" board="px4fmu_2.4">
+    <target name="ap" board="px4fmu_3.0">
       <configure name="PERIODIC_FREQUENCY" value="200"/>
       <configure name="TELEMETRY_FREQUENCY" value="50"/>
 
