@@ -1,0 +1,32 @@
+<!DOCTYPE module SYSTEM "module.dtd">
+
+<module name="board_matek_f405_wing_v2" dir="boards">
+  <doc>
+    <description>
+      Autoload several onboard sensors and modules
+      for the Matek F405 Wing V2 board with proper configuration.
+      IMU ICM42688
+      Baro (DPS310)
+      OSD
+      Normal front of the board is on the servo S3-S8 servo connector
+      Normal up of the board is on STM32F405 side.
+    </description>
+  </doc>
+  <dep>
+    <depends>spi_master,osd_max7456,baro_dps310,imu_icm42688</depends>
+  </dep>
+
+  <makefile target="!sim|nps|fbw">
+    <!-- IMU CONFIGURATION -->
+    <configure name="IMU_SPI_DEV" value="spi1" case="upper|lower"/>
+    <configure name="IMU_SPI_SLAVE_IDX" value="SPI_SLAVE0"/>
+    <!-- BAROMETER DPS310 CONFIGURATION -->
+    <configure name="DPS310_I2C_DEV" value="i2c1" />
+    <!-- OSD CONFIGURATION -->
+    <configure name="MAX7456_SPI_DEV" value="spi2" />
+    <configure name="MAX7456_SLAVE_IDX" value="SPI_SLAVE1" />
+    <define name="USE_MATEK_TYPE_OSD_CHIP" value="true" />
+    <define name="USE_PAL_FOR_OSD_VIDEO" value="true" />
+    <define name="BARO_ALTITUDE_VAR" value="baro_alt" /> <!-- if non defined the default var is ''baro_alt'' -->
+  </makefile>
+</module>

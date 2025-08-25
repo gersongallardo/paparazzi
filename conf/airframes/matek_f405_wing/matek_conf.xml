@@ -1,0 +1,24 @@
+<conf>
+  <aircraft
+   name="Easyglider_Matek_Autoload"
+   ac_id="1"
+   airframe="airframes/matek_f405_wing/Easyglider_matek_f405_autoload.xml"
+   radio="radios/openTX_radio_8ch.xml"
+   telemetry="telemetry/default_fixedwing.xml"
+   flight_plan="flight_plans/basic.xml"
+   settings="settings/fixedwing_basic.xml"
+   settings_modules="modules/ahrs_float_dcm.xml modules/electrical.xml modules/gps.xml modules/gps_ublox.xml modules/gps_ubx_ucenter.xml modules/guidance_basic_fw.xml modules/imu_common.xml modules/nav_basic_fw.xml modules/stabilization_attitude_fw.xml modules/uav_recovery.xml"
+   gui_color="blue"
+  />
+  <aircraft
+   name="Easyglider_Matek_F405"
+   ac_id="2"
+   airframe="airframes/matek_f405_wing/Easyglider_matek_f405_wing.xml"
+   radio="radios/openTX_radio_8ch.xml"
+   telemetry="telemetry/Matek/Matek_Easyglider.xml"
+   flight_plan="flight_plans/basic.xml"
+   settings="settings/fixedwing_basic.xml"
+   settings_modules="modules/ahrs_float_dcm.xml modules/electrical.xml modules/gps.xml modules/gps_ublox.xml modules/gps_ubx_ucenter.xml modules/guidance_basic_fw.xml modules/imu_common.xml modules/nav_basic_fw.xml modules/stabilization_attitude_fw.xml modules/uav_recovery.xml"
+   gui_color="blue"
+  />
+</conf>

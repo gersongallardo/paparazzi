@@ -1,0 +1,28 @@
+<!DOCTYPE module SYSTEM "module.dtd">
+
+<module name="baro_dps310" dir="sensors" task="sensors">
+  <doc>
+    <description>
+      Infineon DPS310 pressure sensor (I2C)
+    </description>
+    <configure name="DPS310_I2C_DEV" value="i2c1" description="I2C peripheral"/>
+    <define name="DPS310_SLAVE_ADDR" value="0x77" description="I2C address"/>
+  </doc>
+  <dep>
+    <depends>i2c</depends>
+    <provides>baro</provides>
+  </dep>
+  <header>
+    <file name="baro_dps310.h"/>
+  </header>
+  <init fun="baro_dps310_init()"/>
+  <periodic fun="baro_dps310_periodic()" freq="50"/>
+  <event fun="baro_dps310_event()"/>
+  <makefile target="ap">
+    <configure name="DPS310_I2C_DEV" default="i2c1" case="upper|lower"/>
+    <configure name="DPS310_SLAVE_ADDR" default="0x77"/>
+    <define name="USE_$(DPS310_I2C_DEV_UPPER)"/>
+    <define name="DPS310_I2C_DEV" value="$(DPS310_I2C_DEV_LOWER)"/>
+    <file name="baro_dps310.c"/>
+  </makefile>
+</module>
