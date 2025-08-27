@@ -13,15 +13,13 @@
     </description>
   </doc>
   <dep>
-    <depends>spi_master,osd_max7456,baro_dps310,imu_icm42688</depends>
+    <depends>spi_master,osd_max7456,baro_board,imu_icm42688</depends>
   </dep>
 
   <makefile target="!sim|nps|fbw">
     <!-- IMU CONFIGURATION -->
     <configure name="IMU_SPI_DEV" value="spi1" case="upper|lower"/>
     <configure name="IMU_SPI_SLAVE_IDX" value="SPI_SLAVE0"/>
-    <!-- BAROMETER DPS310 CONFIGURATION -->
-    <configure name="DPS310_I2C_DEV" value="i2c1" />
     <!-- OSD CONFIGURATION -->
     <configure name="MAX7456_SPI_DEV" value="spi2" />
     <configure name="MAX7456_SLAVE_IDX" value="SPI_SLAVE1" />

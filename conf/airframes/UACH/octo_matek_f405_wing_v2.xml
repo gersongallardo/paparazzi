@@ -4,7 +4,7 @@
      * Autopilot:   Matek F405 Wing v2 with STM32F405
      * IMU:         ICM42688-P
      * Baro:        DPS310
-     * GPS:         Ublox                     http://wiki.paparazziuav.org/wiki/Subsystem/gps
+     * GPS:         UBlox F9P                    http://wiki.paparazziuav.org/wiki/Subsystem/gps
      * RC:          two Spektrum sats         http://wiki.paparazziuav.org/wiki/Subsystem/radio_control#Spektrum
 -->
 
@@ -34,7 +34,7 @@
       <configure name="MODEM_PORT" value="UART6"/>
       <configure name="MODEM_BAUD" value="B57600"/>
     </module>
-    <module name="imu_icm42688"/>
+    <module name="board_matek_f405_wing_v2"/>
 
     <module name="gps"           type="ublox">
       <configure name="GPS_PORT" value="UART1"/>
@@ -67,6 +67,8 @@
 
   <firmware name="test_progs">
     <target name="test_actuators_pwm" board="matek_f405_wing_v2">
+      <configure name="MODEM_PORT" value="UART6"/>
+      <configure name="MODEM_BAUD" value="B57600"/>
       <module name="actuators" type="pwm"/>
       <define name="SERVO_HZ" value="400"/>
       <define name="USE_SERVOS_7AND8" value="TRUE"/>
@@ -91,6 +93,10 @@
     <axis name="YAW"    failsafe_value="0"/>
     <axis name="THRUST" failsafe_value="0"/>
   </commands>
+
+  <section name="BAT">
+    <define name="BAT_CAPACITY" value="32000" unit="mAh"/>
+  </section>
 
   <section name="MIXING" prefix="MOTOR_MIXING_">
     <define name="TRIM_ROLL"  value="0"/>

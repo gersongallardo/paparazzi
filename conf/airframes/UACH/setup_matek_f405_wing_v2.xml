@@ -1,0 +1,56 @@
+<!DOCTYPE airframe SYSTEM "../airframe.dtd">
+
+<!-- Setup configuration for Matek F405 Wing V2 board -->
+<airframe name="setup_matek_f405_wing_v2">
+
+  <firmware name="setup">
+    <target name="tunnel"           board="matek_f405_wing_v2"/>
+    <target name="usb_tunnel"       board="matek_f405_wing_v2">
+      <configure name="TUNNEL_PORT" value="UART3"/>
+    </target>
+    <target name="setup_actuators"  board="matek_f405_wing_v2">
+      <module name="actuators" type="pwm"/>
+      <define name="SERVO_HZ" value="400"/>
+      <define name="USE_SERVOS_7AND8"/>
+    </target>
+  </firmware>
+
+  <firmware name="test_progs">
+    <target name="test_sys_time_timer"      board="matek_f405_wing_v2"/>
+    <target name="test_sys_time_usleep"     board="matek_f405_wing_v2"/>
+    <target name="test_telemetry"           board="matek_f405_wing_v2"/>
+
+    <target name="test_actuators_pwm"       board="matek_f405_wing_v2">
+      <define name="SERVO_HZ" value="400"/>
+      <define name="USE_SERVOS_7AND8"/>
+    </target>
+    <target name="test_actuators_pwm_sin"   board="matek_f405_wing_v2">
+      <define name="USE_SERVOS_7AND8"/>
+    </target>
+    <target name="test_baro_board"          board="matek_f405_wing_v2">
+      <configure name="BARO_LED" value="1"/>
+    </target>
+    <target name="test_adc"                 board="matek_f405_wing_v2"/>
+    <target name="test_uart"                board="matek_f405_wing_v2">
+      <define name="USE_UART2"/>
+      <define name="UART2_BAUD" value="B57600"/>
+      <define name="USE_UART3"/>
+      <define name="UART3_BAUD" value="B57600"/>
+    </target>
+  </firmware>
+
+  <servos>
+    <servo name="1"   no="0" min="900" neutral="1000" max="2100"/>
+    <servo name="2"   no="1" min="900" neutral="1000" max="2100"/>
+    <servo name="3"   no="2" min="900" neutral="1000" max="2100"/>
+    <servo name="4"   no="3" min="900" neutral="1000" max="2100"/>
+    <servo name="5"   no="4" min="900" neutral="1000" max="2100"/>
+    <servo name="6"   no="5" min="900" neutral="1000" max="2100"/>
+    <servo name="7"   no="6" min="900" neutral="1000" max="2100"/>
+    <servo name="8"   no="7" min="900" neutral="1000" max="2100"/>
+  </servos>
+
+  <command_laws>
+  </command_laws>
+
+</airframe>

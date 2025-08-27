@@ -36,6 +36,15 @@ else ifeq ($(BOARD), disco)
   BARO_BOARD_SRCS += peripherals/ms5611_i2c.c
   BARO_BOARD_SRCS += boards/baro_board_ms5611_i2c.c
 
+# Matek F405 Wing baro (DPS310)
+else ifeq ($(BOARD), matek_f405_wing)
+  BARO_BOARD_CFLAGS += -DBARO_BOARD=BARO_DPS310
+  BARO_BOARD_CFLAGS += -DUSE_I2C1
+  BARO_BOARD_CFLAGS += -DDPS310_I2C_DEV=i2c1
+  BARO_BOARD_CFLAGS += -DDPS310_SLAVE_ADDR=0x77
+  BARO_BOARD_SRCS += modules/sensors/baro_dps310.c
+  BARO_BOARD_SRCS += boards/baro_board_dps310.c
+
 # Lisa/M baro
 else ifeq ($(BOARD), lisa_m)
   ifeq ($(BOARD_VERSION), 1.0)

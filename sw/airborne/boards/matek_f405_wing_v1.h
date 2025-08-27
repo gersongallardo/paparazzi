@@ -465,4 +465,8 @@
 
 
 
+#ifndef USE_BARO_BOARD
+#define USE_BARO_BOARD 1
+#endif
+
 #endif // CONFIG_MATEK_F405_WING_1_0_H 

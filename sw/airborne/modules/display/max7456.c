@@ -37,8 +37,17 @@
 #include "generated/flight_plan.h"
 #include "generated/airframe.h"
 #include "autopilot.h"
+#include "generated/modules.h"
+#include "modules/sensors/baro.h"
 #include "modules/energy/electrical.h"
 #include "state.h"
+
+#if !defined(MAX7456_PERIODIC_FREQ) && defined(OSD_MAX7456_PERIODIC_FREQ)
+#define MAX7456_PERIODIC_FREQ OSD_MAX7456_PERIODIC_FREQ
+#endif
+#ifndef MAX7456_PERIODIC_FREQ
+#define MAX7456_PERIODIC_FREQ 20
+#endif
 
 // for GetPosAlt, include correct header until we have unified API
 #if defined(FIXEDWING_FIRMWARE)
