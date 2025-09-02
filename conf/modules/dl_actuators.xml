@@ -1,0 +1,26 @@
+<!DOCTYPE module SYSTEM "module.dtd">
+<module name="dl_actuators" dir="test">
+  <doc>
+    <description>Allow direct PWM control via SET_ACTUATOR and settings messages</description>
+  </doc>
+  <settings>
+    <dl_settings>
+      <dl_settings NAME="Actuators">
+        <dl_setting var="actuators_pwm_values[0]" min="900" step="1" max="2100" shortname="chan0"/>
+        <dl_setting var="actuators_pwm_values[1]" min="900" step="1" max="2100" shortname="chan1"/>
+        <dl_setting var="actuators_pwm_values[2]" min="900" step="1" max="2100" shortname="chan2"/>
+        <dl_setting var="actuators_pwm_values[3]" min="900" step="1" max="2100" shortname="chan3"/>
+        <dl_setting var="actuators_pwm_values[4]" min="900" step="1" max="2100" shortname="chan4"/>
+        <dl_setting var="actuators_pwm_values[5]" min="900" step="1" max="2100" shortname="chan5"/>
+        <dl_setting var="actuators_pwm_values[6]" min="900" step="1" max="2100" shortname="chan6"/>
+        <dl_setting var="actuators_pwm_values[7]" min="900" step="1" max="2100" shortname="chan7"/>
+      </dl_settings>
+    </dl_settings>
+  </settings>
+  <!-- Datalink messages are specified without the DL_ prefix -->
+  <datalink message="SET_ACTUATOR" fun="dl_actuators_parse_dl_set_actuator(dev, trans, buf)"/>
+  <datalink message="SETTING" fun="dl_actuators_parse_dl_setting(dev, trans, buf)"/>
+  <makefile>
+    <file name="dl_actuators.c"/>
+  </makefile>
+</module>

@@ -1,7 +1,8 @@
 <!DOCTYPE airframe SYSTEM "../airframe.dtd">
 
-<!-- Setup configuration for Matek F405 Wing V2 board -->
-<airframe name="setup_matek_f405_wing_v2">
+<!-- this is a quadrotor frame equiped with ELLE0 and PWM motor controllers -->
+
+<airframe name="setup_matek_0.1">
 
   <firmware name="setup">
     <target name="tunnel"           board="matek_f405_wing_v2"/>
@@ -17,7 +18,7 @@
 
   <firmware name="test_progs">
     <target name="test_sys_time_timer"      board="matek_f405_wing_v2"/>
-    <target name="test_sys_time_usleep"     board="matek_f405_wing_v2"/>
+	<target name="test_sys_time_usleep"     board="matek_f405_wing_v2"/>
     <target name="test_telemetry"           board="matek_f405_wing_v2"/>
 
     <target name="test_actuators_pwm"       board="matek_f405_wing_v2">
@@ -29,6 +30,8 @@
     </target>
     <target name="test_baro_board"          board="matek_f405_wing_v2">
       <configure name="BARO_LED" value="2"/>
+      <configure name="MODEM_PORT" value="UART6"/>
+      <configure name="MODEM_BAUD" value="B57600"/>
     </target>
     <target name="test_adc"                 board="matek_f405_wing_v2"/>
     <target name="test_uart"                board="matek_f405_wing_v2">

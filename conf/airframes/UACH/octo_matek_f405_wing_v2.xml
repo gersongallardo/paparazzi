@@ -13,6 +13,7 @@
   <firmware name="rotorcraft">
     <target name="ap" board="matek_f405_wing_v2">
       <!-- ICM42688-P configured via SPI1 -->
+      <configure name="BARO_LED" value="2"/>
     </target>
 
     <target name="nps" board="pc">
@@ -30,6 +31,8 @@
       <define name="SERVO_HZ" value="400"/>
       <define name="USE_SERVOS_7AND8" value="TRUE"/>
     </module>
+    <module name="dl_actuators"/>
+    <module name="actuators_pwm_test"/>
     <module name="telemetry" type="transparent">
       <configure name="MODEM_PORT" value="UART6"/>
       <configure name="MODEM_BAUD" value="B57600"/>
@@ -57,11 +60,12 @@
 
   <firmware name="setup">
     <target name="setup_actuators" board="matek_f405_wing_v2">
+      <configure name="BARO_LED" value="2"/>
       <configure name="MODEM_PORT" value="UART6"/>
       <configure name="MODEM_BAUD" value="B57600"/>
       <module name="actuators" type="pwm"/>
       <define name="SERVO_HZ" value="400"/>
-      <define name="USE_SERVOS_7AND8" value="TRUE"/>
+      <define name="USE_SERVOS_7AND8"/>
     </target>
   </firmware>
 
@@ -69,9 +73,11 @@
     <target name="test_actuators_pwm" board="matek_f405_wing_v2">
       <configure name="MODEM_PORT" value="UART6"/>
       <configure name="MODEM_BAUD" value="B57600"/>
-      <module name="actuators" type="pwm"/>
+      <module name="actuators_pwm"/>
       <define name="SERVO_HZ" value="400"/>
-      <define name="USE_SERVOS_7AND8" value="TRUE"/>
+      <define name="USE_SERVOS_7AND8"/>
+    </target>
+    <target name="test_actuators_pwm_sin"   board="matek_f405_wing_v2">
     </target>
   </firmware>
 

@@ -386,6 +386,7 @@ test_baro_board.CFLAGS += $(COMMON_TELEMETRY_CFLAGS)
 test_baro_board.srcs   += $(COMMON_TELEMETRY_SRCS)
 test_baro_board.srcs += test/test_baro_board.c
 test_baro_board.srcs += mcu_periph/i2c.c $(SRC_ARCH)/mcu_periph/i2c_arch.c
+test_baro_board.srcs += $(SRC_ARCH)/modules/core/threads_arch.c
 ifeq ($(TARGET),test_baro_board)
 include $(CFG_SHARED)/baro_board.makefile
 endif

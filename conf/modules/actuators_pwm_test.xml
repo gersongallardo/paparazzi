@@ -1,0 +1,34 @@
+<!DOCTYPE module SYSTEM "module.dtd">
+
+<module name="actuators_pwm_test" dir="actuators" task="actuators">
+  <doc>
+    <description>
+      Simple module to test PWM actuators by setting servo values through settings.
+    </description>
+  </doc>
+  <settings>
+    <dl_settings>
+      <dl_settings NAME="Actuators Test">
+        <dl_setting VAR="actuators_pwm_test_values[0]" MIN="900" STEP="1" MAX="2100" shortname="chan0"/>
+        <dl_setting VAR="actuators_pwm_test_values[1]" MIN="900" STEP="1" MAX="2100" shortname="chan1"/>
+        <dl_setting VAR="actuators_pwm_test_values[2]" MIN="900" STEP="1" MAX="2100" shortname="chan2"/>
+        <dl_setting VAR="actuators_pwm_test_values[3]" MIN="900" STEP="1" MAX="2100" shortname="chan3"/>
+        <dl_setting VAR="actuators_pwm_test_values[4]" MIN="900" STEP="1" MAX="2100" shortname="chan4"/>
+        <dl_setting VAR="actuators_pwm_test_values[5]" MIN="900" STEP="1" MAX="2100" shortname="chan5"/>
+        <dl_setting VAR="actuators_pwm_test_values[6]" MIN="900" STEP="1" MAX="2100" shortname="chan6"/>
+        <dl_setting VAR="actuators_pwm_test_values[7]" MIN="900" STEP="1" MAX="2100" shortname="chan7"/>
+      </dl_settings>
+    </dl_settings>
+  </settings>
+  <dep>
+    <depends>actuators_pwm</depends>
+  </dep>
+  <header>
+    <file name="actuators_pwm_test.h"/>
+  </header>
+  <init fun="actuators_pwm_test_init()"/>
+  <periodic fun="actuators_pwm_test_periodic()" freq="50"/>
+  <makefile target="!sim">
+    <file name="actuators_pwm_test.c"/>
+  </makefile>
+</module>

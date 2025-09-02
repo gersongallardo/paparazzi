@@ -68,6 +68,10 @@
 #define BARO_SCP_SENDER_ID 17
 #endif
 
+#ifndef BARO_DPS310_SENDER_ID
+#define BARO_DPS310_SENDER_ID 18
+#endif
+
 #ifndef BARO_SIM_SENDER_ID
 #define BARO_SIM_SENDER_ID 19
 #endif
