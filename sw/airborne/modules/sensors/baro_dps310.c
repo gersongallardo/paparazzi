@@ -13,7 +13,7 @@
 #endif
 
 #ifndef DPS310_SLAVE_ADDR
-#define DPS310_SLAVE_ADDR 0x76
+#define DPS310_SLAVE_ADDR 0x77
 #endif
 
 float baro_alt = 0.f;
@@ -76,7 +76,10 @@ void baro_dps310_periodic(void)
     if (err_cnt < 5) {
       /* keep a small counter so we don't spam retries */
       err_cnt++;
-      DOWNLINK_SEND_TXT(DefaultChannel, DefaultDevice, 23, "DPS310 I2C error");
+#if DOWNLINK
+      const char *msg = "DPS310 I2C error";
+      DOWNLINK_SEND_INFO_MSG(DefaultChannel, DefaultDevice, strlen(msg), msg);
+#endif
     }
     return;
   }
