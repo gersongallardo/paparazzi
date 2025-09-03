@@ -3,7 +3,7 @@
    name="UACH_Matek_Octo"
    ac_id="1"
    airframe="airframes/UACH/octo_matek_f405_wing_v2.xml"
-   radio="radios/cockpitSX.xml"
+   radio="radios/dummy.xml"
    telemetry="telemetry/default_rotorcraft.xml"
    flight_plan="flight_plans/UACH/uach_gsa_one.xml"
    settings="settings/rotorcraft_basic.xml settings/setup_actuators.xml"
