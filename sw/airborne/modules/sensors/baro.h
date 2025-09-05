@@ -32,6 +32,7 @@
 #define SENSORS_BARO_H
 
 #include BOARD_CONFIG
+#include <stdbool.h>
 
 #if USE_BARO_BOARD
 #include "baro_board.h"
@@ -39,6 +40,9 @@
 #define BARO_BOARD BARO_BOARD_DEFAULT
 #endif
 #endif
+
+extern float baro_alt;
+extern bool baro_alt_valid;
 
 extern void baro_init(void);
 extern void baro_periodic(void);

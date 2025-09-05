@@ -3,8 +3,8 @@
 <!-- this is an octocopter frame in x-configuration equiped with
      * Autopilot:   Matek F405 Wing v2 with STM32F405
      * IMU:         ICM42688-P
-     * Baro:        DPS310
-     * GPS:         u-blox M8N (Radiolink SE100) http://wiki.paparazziuav.org/wiki/Subsystem/gps
+     * Baro:        external BMP280 (I2C)
+     * GPS:         UBlox F9P                    http://wiki.paparazziuav.org/wiki/Subsystem/gps
      * RC:          via datalink (no receiver) http://wiki.paparazziuav.org/wiki/Subsystem/radio_control#Spektrum
 -->
 
@@ -14,8 +14,7 @@
     <target name="ap" board="matek_f405_wing_v2">
       <!-- ICM42688-P configured via SPI1 -->
       <configure name="BARO_LED" value="2"/>
-      <!-- Set DPS310 barometer I2C address (change to 0x77 if needed) -->
-      <configure name="DPS310_SLAVE_ADDR" value="0x76"/>
+      <configure name="USE_BARO_BOARD" value="FALSE"/>
     </target>
 
     <target name="nps" board="pc">
@@ -36,10 +35,15 @@
       <configure name="MODEM_BAUD" value="B57600"/>
     </module>
     <module name="board_matek_f405_wing_v2"/>
+    
+    <module name="baro_bmp280_i2c">
+      <configure name="BMP280_I2C_DEV" value="i2c1" />
+      <configure name="BMP280_SLAVE_ADDR" value="BMP280_I2C_ADDR" />
+    </module>
 
     <module name="gps"           type="ublox">
       <configure name="GPS_PORT" value="UART1"/>
-      <configure name="GPS_BAUD" value="B57600"/>
+      <configure name="GPS_BAUD" value="B38400"/>
       <configure name="GPS_UBX_BOOTRESET" value="0"/>
     </module>
     <module name="stabilization" type="int_quat"/>
@@ -77,11 +81,6 @@
     </target>
     <target name="test_actuators_pwm_sin"   board="matek_f405_wing_v2">
     </target>
-    <target name="test_baro_board"          board="matek_f405_wing_v2">
-      <configure name="BARO_LED" value="2"/>
-      <!-- Use same barometer address as main firmware -->
-      <configure name="DPS310_SLAVE_ADDR" value="0x76"/>
-    </target>
   </firmware>
 
 
@@ -104,7 +103,7 @@
   </commands>
 
   <section name="BAT">
-    <define name="BAT_CAPACITY" value="8000" unit="mAh"/>
+    <define name="BAT_CAPACITY" value="32000" unit="mAh"/>
   </section>
 
   <section name="MIXING" prefix="MOTOR_MIXING_">
@@ -240,7 +239,7 @@
 
   <section name="BAT">
     <define name="VoltageOfAdc(adc)"         value="((3.3f/4096.0f) * 11 * (adc))"/>
-    <define name="MilliAmpereOfAdc(adc)"     value="((3.3f/4096.0f) * 45300.0f * (adc))"/>
+    <define name="MilliAmpereOfAdc(adc)"     value="((float)adc) * (8000.0f/4096.0f)"/>
     <define name="CATASTROPHIC_BAT_LEVEL"    value="21.0" unit="V"/>
     <define name="CRITIC_BAT_LEVEL"          value="21.6" unit="V"/>
     <define name="LOW_BAT_LEVEL"             value="22.0" unit="V"/>

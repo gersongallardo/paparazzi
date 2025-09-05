@@ -1,0 +1,80 @@
+<!DOCTYPE flight_plan SYSTEM "../flight_plan.dtd">
+
+<flight_plan alt="115" ground_alt="15" lat0="-39.832029555555555" lon0="-73.24395366666666" max_dist_from_home="8000" name="UACH Octocopter" security_height="30">
+  <header>
+    #include "autopilot.h"
+  </header>
+
+  <waypoints>
+    <waypoint name="HOME" x="0" y="0"/>
+    <waypoint name="CLIMB" x="0" y="5"/>
+    <waypoint name="STDBY" lat="-39.8324" lon="-73.24470"/>
+    <waypoint lat="-39.8322031" lon="-73.2428613" name="1-1_soft"/>
+    <waypoint lat="-39.8312597" lon="-73.2444760" name="1-2_soft"/>
+    <waypoint lat="-39.8322816" lon="-73.2459651" name="1-3_soft"/>
+    <waypoint lat="-39.8348356" lon="-73.2472526" name="1-4_soft"/>
+    <waypoint lat="-39.8353693" lon="-73.2452114" name="1-5_soft"/>
+    <waypoint name="TD" x="5" y="-5"/>
+  </waypoints>
+
+  <sectors>
+    <sector name="WORK" color="orange">
+      <corner name="1-1_soft"/>
+      <corner name="1-2_soft"/>
+      <corner name="1-3_soft"/>
+      <corner name="1-4_soft"/>
+      <corner name="1-5_soft"/>
+    </sector>
+  </sectors>
+
+  <blocks>
+    <block name="Wait GPS">
+      <call_once fun="NavKillThrottle()"/>
+      <while cond="!GpsFixValid()"/>
+    </block>
+
+    <block name="Geo init">
+      <while cond="LessThan(NavBlockTime(), 10)"/>
+      <call_once fun="NavSetGroundReferenceHere()"/>
+    </block>
+
+    <block name="Holding point">
+      <call_once fun="NavKillThrottle()"/>
+      <attitude pitch="0" roll="0" throttle="0" vmode="throttle" until="FALSE"/>
+    </block>
+
+    <block name="Start Engine">
+      <call_once fun="NavResurrect()"/>
+      <attitude pitch="0" roll="0" throttle="0" vmode="throttle" until="FALSE"/>
+    </block>
+
+    <block name="Takeoff" strip_button="Takeoff" strip_icon="takeoff.png">
+      <exception cond="stateGetPositionEnu_f() @DEREF z @GT 2.0" deroute="Standby"/>
+      <call_once fun="NavSetWaypointHere(WP_CLIMB)"/>
+      <stay vmode="climb" climb="nav.climb_vspeed" wp="CLIMB"/>
+    </block>
+
+    <block name="Standby" strip_button="Standby" strip_icon="home.png">
+      <stay wp="STDBY"/>
+    </block>
+
+    <block name="land here" strip_button="Land Here" strip_icon="land-right.png">
+      <call_once fun="NavSetWaypointHere(WP_TD)"/>
+    </block>
+
+    <block name="land">
+      <go wp="TD"/>
+    </block>
+
+    <block name="flare">
+      <exception cond="NavDetectGround()" deroute="Holding point"/>
+      <exception cond="!nav_is_in_flight()" deroute="landed"/>
+      <call_once fun="NavStartDetectGround()"/>
+      <stay climb="nav.descend_vspeed" vmode="climb" wp="TD"/>
+    </block>
+
+    <block name="landed">
+      <attitude pitch="0" roll="0" throttle="0" vmode="throttle" until="FALSE"/>
+    </block>
+  </blocks>
+</flight_plan>
