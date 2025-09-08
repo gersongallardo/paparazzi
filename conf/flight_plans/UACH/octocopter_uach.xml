@@ -9,6 +9,7 @@
     <waypoint name="HOME" x="0" y="0"/>
     <waypoint name="CLIMB" x="0" y="5"/>
     <waypoint name="STDBY" lat="-39.8324" lon="-73.24470"/>
+    <waypoint name="P1" x="0" y="0" height="1"/>
     <waypoint lat="-39.8322031" lon="-73.2428613" name="1-1_soft"/>
     <waypoint lat="-39.8312597" lon="-73.2444760" name="1-2_soft"/>
     <waypoint lat="-39.8322816" lon="-73.2459651" name="1-3_soft"/>
@@ -46,6 +47,12 @@
     <block name="Start Engine">
       <call_once fun="NavResurrect()"/>
       <attitude pitch="0" roll="0" throttle="0" vmode="throttle" until="FALSE"/>
+    </block>
+
+    <block name="Hover P1" strip_button="Hover P1" strip_icon="waypoint_one.png">
+      <call_once fun="NavResurrect()"/>
+      <call_once fun="NavSetWaypointHere(WP_P1)"/>
+      <stay vmode="climb" climb="nav.climb_vspeed" wp="P1"/>
     </block>
 
     <block name="Takeoff" strip_button="Takeoff" strip_icon="takeoff.png">

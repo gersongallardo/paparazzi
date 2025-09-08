@@ -15,7 +15,7 @@
       <!-- ICM42688-P configured via SPI1 -->
       <configure name="BARO_LED" value="2"/>
       <!-- Set DPS310 barometer I2C address (change to 0x77 if needed) -->
-      <configure name="DPS310_SLAVE_ADDR" value="0x76"/>
+      <configure name="DPS310_SLAVE_ADDR" value="0x77"/>
     </target>
 
     <target name="nps" board="pc">
