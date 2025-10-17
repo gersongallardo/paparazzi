@@ -30,6 +30,18 @@
     </module>
     <module name="board_matek_f405_wing_v2"/>
 
+    <module name="sonar_i2c">
+      <configure name="SONAR_I2C_DEV" value="i2c2"/>
+      <!-- SUI04 reports 0x70 on 7-bit scans, which corresponds to 0xE0 in the 8-bit format expected by the driver -->
+      <configure name="SONAR_I2C_ADDR" value="0xE0"/>
+      <configure name="SONAR_I2C_PERIODIC_FREQUENCY" value="10"/>
+      <define name="SONAR_I2C_USE_FILTER" value="TRUE"/>
+      <define name="SONAR_I2C_SCALE" value="0.0000406"/>
+      <define name="SONAR_I2C_MIN_RANGE" value="0.40" unit="m"/>
+      <define name="SONAR_I2C_MAX_RANGE" value="4.50" unit="m"/>
+      <define name="MODULE_SONAR_I2C_SYNC_SEND" value="FALSE" description="Send RAW and scaled message with each new measurement,useful for debugging sensor issues (default: FALSE)"/>
+    </module>
+
     <module name="baro" type="ms5611_i2c">
       <define name="BB_MS5611_TYPE_MS5607" value="TRUE" />
     </module>
@@ -44,7 +56,7 @@
 
     <module name="stabilization" type="int_quat"/>
     <module name="ahrs" type="int_cmpl_quat"/>
-    <module name="ins" type="hff"/>
+     <module name="ins" type="hff_extended"/>
     <module name="geo_mag"/>
     <module name="air_data"/>
     <module name="electrical"/>
@@ -172,6 +184,10 @@
 
   <section name="AIR_DATA" prefix="AIR_DATA_">
     <define name="CALC_AMSL_BARO" value="TRUE"/>
+  </section>
+  
+  <section name="SONAR" prefix="SONAR_">
+    <define name="OFFSET" value="0.0" unit="m"/>
   </section>
   
   <section name="STABILIZATION_RATE" prefix="STABILIZATION_RATE_">
