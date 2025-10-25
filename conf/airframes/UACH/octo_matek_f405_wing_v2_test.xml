@@ -4,7 +4,7 @@
      * Autopilot:   Matek F405 Wing v2 with STM32F405
      * IMU:         ICM42688-P via board configuration
      * Baro:        external MS5611 on I2C1 (0x77)
-     * GPS:         u-blox M8N
+     * GPS:         u-blox ZED-F9P
      * RC:          Datalink only (GCS control)
      * Battery:     6S 22.2V 32000mAh
 -->
@@ -35,6 +35,7 @@
       <!-- SUI04 reports 0x70 on 7-bit scans, which corresponds to 0xE0 in the 8-bit format expected by the driver -->
       <configure name="SONAR_I2C_ADDR" value="0xE0"/>
       <configure name="SONAR_I2C_PERIODIC_FREQUENCY" value="10"/>
+      <configure name="USE_SONAR_I2C_AGL" value="TRUE" />
       <define name="SONAR_I2C_USE_FILTER" value="TRUE"/>
       <define name="SONAR_I2C_SCALE" value="0.0000406"/>
       <define name="SONAR_I2C_MIN_RANGE" value="0.40" unit="m"/>
@@ -45,10 +46,10 @@
     <module name="baro" type="ms5611_i2c">
       <define name="BB_MS5611_TYPE_MS5607" value="TRUE" />
     </module>
-
+    
     <module name="gps" type="ublox">
       <configure name="GPS_PORT" value="UART1"/>
-      <configure name="GPS_BAUD" value="B57600"/>
+      <configure name="GPS_BAUD" value="B115200"/>
       <configure name="GPS_UBX_BOOTRESET" value="0"/>
     </module>
 
@@ -111,9 +112,12 @@
   </command_laws>
 
   <section name="IMU" prefix="IMU_">
-    <define name="ACCEL_X_NEUTRAL" value="11"/>
-    <define name="ACCEL_Y_NEUTRAL" value="11"/>
-    <define name="ACCEL_Z_NEUTRAL" value="-25"/>
+    <define name="ACCEL_X_NEUTRAL" value="0"/>
+    <define name="ACCEL_Y_NEUTRAL" value="-3"/>
+    <define name="ACCEL_Z_NEUTRAL" value="10"/>
+    <define name="ACCEL_X_SENS" value="2.4526" integer="16"/>
+    <define name="ACCEL_Y_SENS" value="2.4497" integer="16"/>
+    <define name="ACCEL_Z_SENS" value="2.4546" integer="16"/>
 
     <!-- replace this with your own calibration -->
     <define name="MAG_X_NEUTRAL" value="-179"/>
@@ -223,4 +227,13 @@
     <define name="IGAIN" value="20"/>
   </section>
 
+  <section name="BAT">
+    <define name="VoltageOfAdc(adc)"         value="((3.3f/4096.0f) * 11 * (adc))"/>
+    <define name="MilliAmpereOfAdc(adc)"     value="((3.3f/4096.0f) * 63500.0f * (adc))"/>
+    <define name="CATASTROPHIC_BAT_LEVEL"    value="21.0" unit="V"/>
+    <define name="CRITIC_BAT_LEVEL"          value="21.6" unit="V"/>
+    <define name="LOW_BAT_LEVEL"             value="22.0" unit="V"/>
+    <define name="MAX_BAT_LEVEL"             value="25.2" unit="V"/>
+  </section>
+  
 </airframe>
