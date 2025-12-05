@@ -1,0 +1,70 @@
+<!DOCTYPE flight_plan SYSTEM "../flight_plan.dtd">
+
+<flight_plan alt="5" ground_alt="15" lat0="-39.832029555555555" lon0="-73.24395366666666" max_dist_from_home="50" name="UACH Octocopter Hover Test" security_height="2">
+  <header>
+    #include "autopilot.h"
+  </header>
+
+  <waypoints>
+    <waypoint name="HOME" x="0" y="0"/>
+    <waypoint name="TEST" x="0" y="0" height="0.5"/>
+    <waypoint name="HOLD" x="0" y="0" height="0.5"/>
+    <waypoint name="LAND" x="0" y="0" height="0"/>
+  </waypoints>
+
+  <exceptions>
+    <!-- Datalink loss: start an immediate descent to LAND after 10s without GCS -->
+    <exception cond="(datalink_time @GT 10 @AND autopilot_in_flight())" deroute="FailsafeDescend"/>
+
+    <!-- Battery critical: land straight away to protect the pack -->
+    <exception cond="(electrical.bat_critical @AND autopilot_in_flight())" deroute="FailsafeDescend"/>
+  </exceptions>
+  
+  <blocks>
+    <block name="Wait GPS">
+      <call_once fun="NavKillThrottle()"/>
+      <while cond="!GpsFixValid()"/>
+    </block>
+
+    <block name="Geo init">
+      <while cond="LessThan(NavBlockTime(), 5)"/>
+      <call_once fun="NavSetGroundReferenceHere()"/>
+    </block>
+
+    <block name="Start Motors">
+      <call_once fun="NavResurrect()"/>
+      <attitude pitch="0" roll="0" throttle="0" vmode="throttle" until="FALSE"/>
+    </block>
+
+    <block name="Climb to 0.5m" strip_button="Climb" strip_icon="takeoff.png">
+      <call_once fun="NavResurrect()"/>
+      <call_once fun="NavSetWaypointHere(WP_TEST)"/>
+      <stay vmode="climb" climb="nav.climb_vspeed" wp="TEST"/>
+    </block>
+
+    <block name="Hover Test" strip_button="Hover" strip_icon="waypoint_one.png">
+      <call_once fun="NavSetWaypointHere(WP_HOLD)"/>
+      <stay until="stage_time>30" wp="HOLD"/>
+    </block>
+
+    <block name="Descend" strip_button="Descend" strip_icon="land-right.png">
+      <exception cond="NavDetectGround()" deroute="Landed"/>
+      <call_once fun="NavSetWaypointHere(WP_LAND)"/>
+      <call_once fun="NavStartDetectGround()"/>
+      <stay vmode="climb" climb="nav.descend_vspeed" wp="LAND"/>
+    </block>
+
+    <block name="Landed">
+      <call_once fun="NavKillThrottle()"/>
+      <attitude pitch="0" roll="0" throttle="0" vmode="throttle" until="FALSE"/>
+    </block>
+
+    <block name="FailsafeDescend">
+      <exception cond="NavDetectGround()" deroute="Landed"/>
+      <call_once fun="NavSetWaypointHere(WP_LAND)"/>
+      <call_once fun="NavStartDetectGround()"/>
+      <stay vmode="climb" climb="nav.descend_vspeed" wp="LAND"/>
+    </block>
+  </blocks>
+</flight_plan>
+
