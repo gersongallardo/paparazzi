@@ -1,86 +1,149 @@
-# MAIN README
+# Guía rápida para abrir Paparazzi Center y GCS desde este repositorio
 
-Paparazzi UAS
-=============
-[![Build Status](https://paparazziuav.semaphoreci.com/badges/paparazzi/branches/master.svg?style=shields&key=d3a59143-a357-434e-89b8-057f15ed8dd2)](https://paparazziuav.semaphoreci.com/projects/paparazzi) [![Gitter chat](https://badges.gitter.im/paparazzi/discuss.svg)](https://gitter.im/paparazzi/discuss)
-<a href="https://scan.coverity.com/projects/paparazzi-paparazzi">
-  <img alt="Coverity Scan Build Status"
-       src="https://scan.coverity.com/projects/4928/badge.svg"/>
-</a>
+Esta guía está pensada para que cualquier usuario del proyecto fondecyt pueda clonar **mi fork** y ejecutar exactamente los módulos/configuraciones que tiene este repositorio.
 
-Paparazzi is a free open source software package for Unmanned (Air) Vehicle Systems.
-For many years, the system has been used successfuly by hobbyists, universities and companies all over the world, on vehicles of various sizes (11.9g to 25kg).
-Paparazzi supports fixed wing, rotorcraft, hybrids, flapping vehicles and it is even possible to use it for boats and surface vehicles.
+Repositorio:
 
-Documentation is available here https://paparazzi-uav.readthedocs.io/en/latest/
-
-More docs is also available on the wiki http://wiki.paparazziuav.org
-
-To get in touch, subscribe to the mailing list [paparazzi-devel@nongnu.org] (http://savannah.nongnu.org/mail/?group=paparazzi), the IRC channel (freenode, #paparazzi) and Gitter (https://gitter.im/paparazzi/discuss).
-
-Required software
------------------
-
-Instructions for installation can be found on the wiki (http://wiki.paparazziuav.org/wiki/Installation).
-
-Quick start:
-
+```bash
+git clone https://github.com/gersongallardo/paparazzi.git
 ```
-git clone https://github.com/paparazzi/paparazzi.git
-cd ./paparazzi
+
+---
+
+## 1) Dependencias (Ubuntu 22.04/24.04)
+
+> Si usan otra distro, conviene usar una VM Ubuntu o Docker de Paparazzi.
+
+```bash
+sudo apt update
+sudo apt install -y \
+  git build-essential make pkg-config \
+  python3 python3-venv python3-pip python3-setuptools \
+  python3-pyqt5 python3-lxml python3-numpy python3-serial \
+  gcc-arm-none-eabi gdb-multiarch dfu-util \
+  pprzgcs
+```
+
+Dependencias opcionales recomendadas:
+
+```bash
+sudo apt install -y \
+  gazebo libgazebo-dev \
+  ffmpeg vlc jstest-gtk default-jre
+```
+
+---
+
+## 2) Clonar tu repositorio y preparar submódulos
+
+```bash
+git clone https://github.com/gersongallardo/paparazzi.git
+cd paparazzi
+git submodule sync --recursive
+git submodule update --init --recursive
+```
+
+---
+
+## 3) Instalar entorno Python del proyecto
+
+```bash
 ./install.sh
 ```
 
+Si `install.sh` crea el entorno virtual `pprzEnv`, activarlo en cada terminal:
 
+```bash
+source pprzEnv/bin/activate
+```
 
-For Ubuntu users, required packages are available in the [paparazzi-uav PPA] (https://launchpad.net/~paparazzi-uav/+archive/ppa),
-Debian users can use the [OpenSUSE Build Service repository] (http://download.opensuse.org/repositories/home:/flixr:/paparazzi-uav/Debian_7.0/)
+---
 
-Debian/Ubuntu packages:
-- **paparazzi-dev** is the meta-package on which the Paparazzi software depends to compile and run the ground segment and simulator.
-- **paparazzi-jsbsim** is needed for using JSBSim as flight dynamics model for the simulator.
+## 4) Compilar Paparazzi con tus módulos
 
-Recommended cross compiling toolchain: https://launchpad.net/gcc-arm-embedded
+```bash
+make clean
+make -j"$(nproc)"
+```
 
+> Esto compila usando los archivos de configuración y módulos que están en **este fork** (por ejemplo en `conf/` y `sw/`).
 
-Directories quick and dirty description:
-----------------------------------------
+---
 
-_conf_: the configuration directory (airframe, radio, ... descriptions).
+## 5) Abrir Paparazzi Center
 
-_data_: where to put read-only data (e.g. maps, terrain elevation files, icons)
+```bash
+./paparazzi
+```
 
-_doc_: documentation (diagrams, manual source files, ...)
+Alternativa:
 
-_sw_: software (onboard, ground station, simulation, ...)
+```bash
+./start.py
+```
 
-_var_: products of compilation, cache for the map tiles, ...
+---
 
+## 6) Abrir GCS
 
-Compilation and demo simulation
--------------------------------
+Si la GCS no se abre automáticamente desde Paparazzi Center, abrirla manualmente:
 
-1. type "make" in the top directory to compile all the libraries and tools.
+```bash
+pprzgcs
+```
 
-2. "./paparazzi" to run the Paparazzi Center
+---
 
-3. Select the "Bixler" aircraft in the upper-left A/C combo box.
-  Select "sim" from upper-middle "target" combo box. Click "Build".
-  When the compilation is finished, select "Simulation" in Operation tab and click "Start Session".
+## 7) Flujo mínimo para controlar UAV (simulación)
 
-4. In the GCS, wait about 10s for the aircraft to be in the "Holding point" navigation block.
-  Switch to the "Takeoff" block (lower-left blue airway button in the strip).
-  Takeoff with the green launch button.
+1. En Paparazzi Center, elegir la aeronave de tu configuración (`conf/`).
+2. Elegir target `sim`.
+3. Presionar **Build**.
+4. Ir a **Operation** → **Simulation** → **Start Session**.
+5. Verificar telemetría en GCS (`pprzgcs`).
+6. Desde la GCS, activar bloque de navegación / comandos según tu plan de vuelo.
 
-Uploading the embedded software
-----------------------------------
+---
 
-1. Power the flight controller board while it is connected to the PC with the USB cable.
+## 8) Comandos “copiar y pegar” (resumen completo)
 
-2. From the Paparazzi center, select the "ap" target, and click "Upload".
+```bash
+sudo apt update
+sudo apt install -y git build-essential make pkg-config \
+  python3 python3-venv python3-pip python3-setuptools \
+  python3-pyqt5 python3-lxml python3-numpy python3-serial \
+  gcc-arm-none-eabi gdb-multiarch dfu-util pprzgcs
 
+# opcional
+sudo apt install -y gazebo libgazebo-dev ffmpeg vlc jstest-gtk default-jre
 
-Flight
-------
+git clone https://github.com/gersongallardo/paparazzi.git
+cd paparazzi
+git submodule sync --recursive
+git submodule update --init --recursive
 
-1.  From the Paparazzi Center, select the flight session and ... do the same as in simulation !
+./install.sh
+source pprzEnv/bin/activate
+
+make clean
+make -j"$(nproc)"
+
+./paparazzi
+# en otra terminal, si hace falta:
+pprzgcs
+```
+
+---
+
+## 9) Nota importante para que usen *tus* módulos
+
+Para asegurar que el usuario usa exactamente mis configuraciones:
+
+```bash
+cd paparazzi
+git remote -v
+git branch --show-current
+git log --oneline -n 5
+```
+
+Debería verse el remoto `gersongallardo/paparazzi` y el commit que tú les indiques.
