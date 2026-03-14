@@ -198,4 +198,4 @@ git branch --show-current
 git log --oneline -n 5
 ```
 
-Debería verse el remoto `gersongallardo/paparazzi` y el commit que tú les indiques.
+Debería verse el remoto `gersongallardo/paparazzi` .
