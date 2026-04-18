@@ -103,6 +103,11 @@ Alternativa:
 
 ## 7) Abrir GCS
 
+Primero instalar PprzGCS siguiendo la guía de 
+https://github.com/paparazzi/PprzGCS
+
+luego regresar aquí y continuar con:
+
 Si la GCS no se abre automáticamente desde Paparazzi Center, abrirla manualmente:
 
 ```bash
