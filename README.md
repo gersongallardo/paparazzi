@@ -58,6 +58,9 @@ git submodule update --init --recursive
 ```bash
 ./install.sh
 ```
+se abrirá el isntalador de paparazzi.
+[doc/install_photo.png](https://github.com/gersongallardo/paparazzi/blob/master/doc/install_photo.png)
+instalarlas una por una y pasar al paso 5.
 
 Si en Ubuntu 23 o Debian falla alguna parte automática de `install.sh`, usar alternativa manual:
 
@@ -98,10 +101,10 @@ Alternativa:
 ```bash
 ./start.py
 ```
-
+ya quedaría isntalado Paparazzi center.
 ---
 
-## 7) Abrir GCS
+## 7) GCS
 
 Primero instalar PprzGCS siguiendo la guía de 
 https://github.com/paparazzi/PprzGCS
