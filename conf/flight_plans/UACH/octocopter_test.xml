@@ -12,6 +12,14 @@
     <waypoint name="LAND" x="0" y="0" height="0"/>
   </waypoints>
 
+  <exceptions>
+    <!-- Datalink loss: start an immediate descent to LAND after 10s without GCS -->
+    <exception cond="(datalink_time @GT 10 @AND autopilot_in_flight())" deroute="FailsafeDescend"/>
+
+    <!-- Battery critical: land straight away to protect the pack -->
+    <exception cond="(electrical.bat_critical @AND autopilot_in_flight())" deroute="FailsafeDescend"/>
+  </exceptions>
+  
   <blocks>
     <block name="Wait GPS">
       <call_once fun="NavKillThrottle()"/>
@@ -49,6 +57,13 @@
     <block name="Landed">
       <call_once fun="NavKillThrottle()"/>
       <attitude pitch="0" roll="0" throttle="0" vmode="throttle" until="FALSE"/>
+    </block>
+
+    <block name="FailsafeDescend">
+      <exception cond="NavDetectGround()" deroute="Landed"/>
+      <call_once fun="NavSetWaypointHere(WP_LAND)"/>
+      <call_once fun="NavStartDetectGround()"/>
+      <stay vmode="climb" climb="nav.descend_vspeed" wp="LAND"/>
     </block>
   </blocks>
 </flight_plan>

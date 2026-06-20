@@ -2,7 +2,7 @@
 
 <!-- this is an octocopter frame in x-configuration equiped with
      * Autopilot:   Matek F405 Wing v2 with STM32F405
-     * IMU:         ICM42688-P
+     * IMU:         ICM42688-P + external HMC58XX
      * Baro:        DPS310
      * GPS:         u-blox M8N (Radiolink SE100) http://wiki.paparazziuav.org/wiki/Subsystem/gps
      * RC:          via datalink (no receiver) http://wiki.paparazziuav.org/wiki/Subsystem/radio_control#Spektrum
@@ -11,11 +11,11 @@
 <airframe name="UACH Octo MatekF405_Wing_V2 pwm">
 
   <firmware name="rotorcraft">
+    <define name="USE_I2C2"/>
+    <define name="USE_SONAR"/>
     <target name="ap" board="matek_f405_wing_v2">
       <!-- ICM42688-P configured via SPI1 -->
       <configure name="BARO_LED" value="2"/>
-      <!-- Set DPS310 barometer I2C address (change to 0x77 if needed) -->
-      <configure name="DPS310_SLAVE_ADDR" value="0x77"/>
     </target>
 
     <target name="nps" board="pc">
@@ -35,24 +35,55 @@
       <configure name="MODEM_PORT" value="UART6"/>
       <configure name="MODEM_BAUD" value="B57600"/>
     </module>
-    <module name="board_matek_f405_wing_v2"/>
+    <module name="board_matek_f405_wing_v2">
+      <configure name="DPS310_I2C_DEV" value="i2c1"/>
+      <configure name="DPS310_SLAVE_ADDR" value="0x76"/>
+    </module>
 
     <module name="gps"           type="ublox">
       <configure name="GPS_PORT" value="UART1"/>
       <configure name="GPS_BAUD" value="B57600"/>
       <configure name="GPS_UBX_BOOTRESET" value="0"/>
     </module>
+
+      <define name="AHRS_ICQ_MAG_ID" value="MAG_HMC58XX_SENDER_ID" />         <!-- Meaning the external hmc-->
+
+      <configure name="USE_MAGNETOMETER" value="TRUE"/>
+      
+    <module name="mag" type="hmc58xx">
+      <configure name="MAG_HMC58XX_I2C_DEV" value="i2c1"/>
+      <define name="MODULE_HMC58XX_UPDATE_AHRS" value="TRUE"/>
+      <define name="HMC58XX_CHAN_X" value="1"/>
+      <define name="HMC58XX_CHAN_Y" value="0"/>
+      <define name="HMC58XX_CHAN_Z" value="2"/>
+      <define name="HMC58XX_CHAN_X_SIGN" value="-"/>
+      <define name="HMC58XX_CHAN_Y_SIGN" value="+"/>
+      <define name="HMC58XX_CHAN_Z_SIGN" value="+"/>
+    </module>
     <module name="stabilization" type="int_quat"/>
     <module name="ahrs"          type="int_cmpl_quat"/>
-    <module name="ins"           type="hff"/>
+    <module name="ins"           type="hff_extended">
+      <define name="INS_SONAR_MIN_RANGE" value="0.4"/>
+      <define name="INS_SONAR_MAX_RANGE" value="4.5"/>
+    </module>
     <module name="gps_ubx_ucenter"/>
     <module name="geo_mag"/>
     <module name="air_data"/>
+    <module name="alt_srf08">
+      <define name="SRF08_I2C_DEV" value="i2c2"/>
+    </module>
     <module name="electrical"/>
     <module name="nav" type="survey_rectangle_rotorcraft">
       <define name="RECTANGLE_SURVEY_DEFAULT_SWEEP" value="10"/>
     </module>
 
+      <!-- optical flow camera over i2c-->
+      <module name="px4flow_i2c">
+        <configure name="USE_PX4FLOW_AGL" value="1" description="update AGL measurements from onboard sonar"/>
+        <comment>compensate AGL for body rotation</comment>
+        <configure name="PX4FLOW_COMPENSATE_ROTATION" value="1"/>
+        <configure name="PX4FLOW_NOISE_STDDEV" value="10.0"/> <!-- standard deviation of the optical flow measurements-->
+      </module>
     <!--define name="KILL_ON_GROUND_DETECT" value="TRUE"/-->
   </firmware>
 
@@ -69,18 +100,9 @@
 
   <firmware name="test_progs">
     <target name="test_actuators_pwm" board="matek_f405_wing_v2">
-      <configure name="MODEM_PORT" value="UART6"/>
-      <configure name="MODEM_BAUD" value="B57600"/>
-      <module name="actuators_pwm"/>
-      <define name="SERVO_HZ" value="400"/>
       <define name="USE_SERVOS_7AND8"/>
     </target>
     <target name="test_actuators_pwm_sin"   board="matek_f405_wing_v2">
-    </target>
-    <target name="test_baro_board"          board="matek_f405_wing_v2">
-      <configure name="BARO_LED" value="2"/>
-      <!-- Use same barometer address as main firmware -->
-      <configure name="DPS310_SLAVE_ADDR" value="0x76"/>
     </target>
   </firmware>
 
@@ -203,6 +225,10 @@
     <define name="PSI_DDGAIN"   value="300"/>
   </section>
 
+  <section name="AIR_DATA" prefix="AIR_DATA_">
+    <define name="CALC_AMSL_BARO" value="TRUE"/>
+  </section>
+  
   <section name="GUIDANCE_V" prefix="GUIDANCE_V_">
     <define name="HOVER_KP"    value="150"/>
     <define name="HOVER_KD"    value="80"/>
@@ -240,11 +266,13 @@
 
   <section name="BAT">
     <define name="VoltageOfAdc(adc)"         value="((3.3f/4096.0f) * 11 * (adc))"/>
-    <define name="MilliAmpereOfAdc(adc)"     value="((3.3f/4096.0f) * 45300.0f * (adc))"/>
-    <define name="CATASTROPHIC_BAT_LEVEL"    value="21.0" unit="V"/>
-    <define name="CRITIC_BAT_LEVEL"          value="21.6" unit="V"/>
-    <define name="LOW_BAT_LEVEL"             value="22.0" unit="V"/>
-    <define name="MAX_BAT_LEVEL"             value="25.0" unit="V"/>
+    <define name="MilliAmpereOfAdc(adc)"     value="((3.3f/4096.0f) * 63500.0f * (adc))"/>
+    <define name="CATASTROPHIC_BAT_LEVEL"    value="18.0" unit="V"/>
+    <define name="CRITIC_BAT_LEVEL"          value="18.6" unit="V"/>
+    <define name="LOW_BAT_LEVEL"             value="19.2" unit="V"/>
+    <define name="MAX_BAT_LEVEL"             value="25.2" unit="V"/>
+    <define name="TAKEOFF_BAT_LEVEL"         value="24.2" unit="V"/>
+    <define name="BAT_NB_CELLS"              value="6"/>
   </section>
 
   <section name="GCS">

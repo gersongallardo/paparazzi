@@ -4,7 +4,7 @@
      * Autopilot:   Matek F405 Wing v2 with STM32F405
      * IMU:         ICM42688-P
      * Baro:        external BMP280 (I2C)
-     * GPS:         UBlox F9P                    http://wiki.paparazziuav.org/wiki/Subsystem/gps
+     * GPS:         u-blox M8N (Radiolink SE100) http://wiki.paparazziuav.org/wiki/Subsystem/gps
      * RC:          via datalink (no receiver) http://wiki.paparazziuav.org/wiki/Subsystem/radio_control#Spektrum
 -->
 
@@ -43,7 +43,7 @@
 
     <module name="gps"           type="ublox">
       <configure name="GPS_PORT" value="UART1"/>
-      <configure name="GPS_BAUD" value="B38400"/>
+      <configure name="GPS_BAUD" value="B57600"/>
       <configure name="GPS_UBX_BOOTRESET" value="0"/>
     </module>
     <module name="stabilization" type="int_quat"/>

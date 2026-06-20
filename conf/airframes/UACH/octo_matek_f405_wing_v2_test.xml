@@ -15,7 +15,7 @@
     <target name="ap" board="matek_f405_wing_v2">
       <configure name="BARO_LED" value="2"/>
       <configure name="USE_BARO_BOARD" value="FALSE"/>
-      <configure name="MS5611_I2C_DEV" value="i2c1" />
+      <configure name="MS5611_I2C_DEV" value="i2c2" />
     </target>
 
     <module name="radio_control" type="datalink"/>
@@ -30,19 +30,26 @@
     </module>
     <module name="board_matek_f405_wing_v2"/>
 
+        <!-- Forward-facing ultrasonic sensor used for obstacle detection only -->
+        <!-- Optional legacy sonar (SUI04). Commented out to avoid running both rangefinders.
     <module name="sonar_i2c">
       <configure name="SONAR_I2C_DEV" value="i2c2"/>
-      <!-- SUI04 reports 0x70 on 7-bit scans, which corresponds to 0xE0 in the 8-bit format expected by the driver -->
       <configure name="SONAR_I2C_ADDR" value="0xE0"/>
       <configure name="SONAR_I2C_PERIODIC_FREQUENCY" value="10"/>
-      <configure name="USE_SONAR_I2C_AGL" value="TRUE" />
+      <configure name="USE_SONAR_I2C_AGL" value="FALSE" />
+      <define name="SONAR_I2C_OFFSET" value="0.24"  description="Sensor offset in meters, as in where one wants zero to be, default is 0.0"/>
       <define name="SONAR_I2C_USE_FILTER" value="TRUE"/>
       <define name="SONAR_I2C_SCALE" value="0.0000406"/>
       <define name="SONAR_I2C_MIN_RANGE" value="0.40" unit="m"/>
       <define name="SONAR_I2C_MAX_RANGE" value="4.50" unit="m"/>
       <define name="MODULE_SONAR_I2C_SYNC_SEND" value="FALSE" description="Send RAW and scaled message with each new measurement,useful for debugging sensor issues (default: FALSE)"/>
     </module>
-
+    -->
+    <module name="lidar_lite">
+        <configure name="LIDAR_LITE_I2C_DEV" value="I2C1"/>
+        <configure name="USE_LIDAR_LITE_AGL" value="1"/> <!-- send AGL measurements -->
+        <configure name="LIDAR_LITE_COMPENSATE_ROTATION" value="1" /> <!-- compensate AGL for body rotation -->
+    </module>
     <module name="baro" type="ms5611_i2c">
       <define name="BB_MS5611_TYPE_MS5607" value="TRUE" />
     </module>

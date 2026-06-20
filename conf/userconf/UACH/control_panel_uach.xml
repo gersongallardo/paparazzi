@@ -9,6 +9,7 @@
     </program>
     <program name="Server" command="sw/ground_segment/tmtc/server"/>
     <program name="Messages" command="sw/ground_segment/tmtc/messages"/>
+    <program name="Real-time Plotter" command="sw/logalizer/plotter"/>
   </section>
   <section name="sessions">
     <session name="Secure Flight v2.0 USB-serial@57600">
@@ -32,6 +33,7 @@
       <program name="Server"/>
       <program name="PprzGCS"/>
       <program name="Messages"/>
+      <program name="Real-time Plotter"/>
     </session>
   </section>
 </control_panel>
